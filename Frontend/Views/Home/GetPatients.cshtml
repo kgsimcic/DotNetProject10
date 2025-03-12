@@ -1,0 +1,40 @@
+﻿@model IEnumerable<Frontend.Models.PatientModel>
+
+@{
+    ViewData["Title"] = "GetPatients";
+}
+
+<h1>Patients</h1>
+
+<div class="container mt-4">
+    <table class="table table-striped">
+        <tr>
+            <th>@Html.DisplayNameFor(modelItem => modelItem.Id)</th>
+            <th>@Html.DisplayNameFor(modelItem => modelItem.GivenName)</th>
+            <th>@Html.DisplayNameFor(modelItem => modelItem.FamilyName)</th>
+            <th>@Html.DisplayNameFor(modelItem => modelItem.Dob)</th>
+            <th>@Html.DisplayNameFor(modelItem => modelItem.Sex)</th>
+            <th>@Html.DisplayNameFor(modelItem => modelItem.Address)</th>
+            <th>@Html.DisplayNameFor(modelItem => modelItem.Phone)</th>
+            <th></th>
+        </tr>
+        <tbody>
+            @foreach (var patient in Model)
+            {
+                <tr>
+                    <td>@patient.Id</td>
+                    <td>@patient.GivenName</td>
+                    <td>@patient.FamilyName</td>
+                    <td>@patient.Dob.ToString("MM/dd/yyyy")</td>
+                    <td>@patient.Sex</td>
+                    <td>@patient.Address</td>
+                    <td>@patient.Phone</td>
+                    <td><a asp-action="GetNotes" asp-route-id="/Notes/@patient.Id" class="btn btn-primary">See Notes</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <p>
+        <a asp-action="Create New Patient" class="btn btn-primary">Create New Patient</a>
+    </p>
+</div>
