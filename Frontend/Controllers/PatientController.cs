@@ -1,30 +1,37 @@
 using Frontend.Models;
 using Frontend.Services;
+using Frontend.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace Frontend.Controllers
 {
-    public class HomeController : Controller
+    public class PatientController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<PatientController> _logger;
         private readonly IPatientService _patientService;
 
-        public HomeController(ILogger<HomeController> logger, IPatientService patientService)
+        public PatientController(ILogger<PatientController> logger, IPatientService patientService)
         {
             _logger = logger;
             _patientService = patientService;
         }
 
-        public async Task<IActionResult> GetPatients()
+        public async Task<IActionResult> GetAll()
         {
             IEnumerable<PatientModel?> patients = await _patientService.GetPatients();
             return View(patients);
         }
 
-        public IActionResult Privacy()
+        public IActionResult CreateForm()
         {
             return View();
+        }
+
+        public async Task<IActionResult> Create([FromForm] PatientViewModel patientViewModel)
+        {
+            await _patientService.Create(patientViewModel);
+            return RedirectToAction(nameof(GetAll));
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

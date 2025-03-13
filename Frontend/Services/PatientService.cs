@@ -1,6 +1,8 @@
 ﻿using Frontend.Models;
+using Frontend.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace Frontend.Services
 {
@@ -9,8 +11,6 @@ namespace Frontend.Services
         private readonly HttpClient _httpClient;
         public PatientService(HttpClient httpClient) {
             _httpClient = httpClient;
-
-            // _httpClient.BaseAddress = new Uri("http://localhost:5001");
             _httpClient.BaseAddress = new Uri("https://localhost:7185");
         }
 
@@ -22,8 +22,26 @@ namespace Frontend.Services
             string responseString = await response.Content.ReadAsStringAsync();
             string responseJson = responseString.Replace("\\", "").Trim(new[] { '"' });
 
-            IEnumerable<PatientModel?> patients = JsonConvert.DeserializeObject<IEnumerable<PatientModel?>>(responseJson);
+            IEnumerable<Models.PatientModel?> patients = JsonConvert.DeserializeObject<IEnumerable<PatientModel?>>(responseJson);
             return (patients);
+        }
+
+        public async Task<bool> Create(PatientViewModel patientViewModel)
+        {
+            PatientModel patientModel = new PatientModel {
+                GivenName = patientViewModel.GivenName,
+                FamilyName = patientViewModel.FamilyName,
+                Dob = patientViewModel.Dob.ToDateTime(TimeOnly.Parse("00:00 AM")),
+                Sex = patientViewModel.Sex,
+                Address = patientViewModel.Address,
+                Phone = patientViewModel.Phone
+            };
+
+            string requestString = JsonConvert.SerializeObject(patientModel);
+            StringContent content = new (requestString, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync("/Patient/Patients", content);
+            return response.IsSuccessStatusCode;
         }
     }
 }

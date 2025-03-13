@@ -3,6 +3,7 @@ using PatientMicroservice.Entities;
 using PatientMicroservice.Models;
 // using PatientMicroservice.Mappings;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace PatientMicroservice.Services
 {
@@ -65,6 +66,7 @@ namespace PatientMicroservice.Services
             };
 
             _context.Patients.Add(patient);
+            Console.WriteLine("Hi I am a breaKPOINT");
             await _context.SaveChangesAsync();
             return patient.Id;
         }

@@ -26,8 +26,7 @@ public partial class PatientDbContext : DbContext
     {
         modelBuilder.Entity<Patient>(entity =>
         {
-            entity.HasNoKey();
-
+            entity.HasKey(e => e.Id);
             entity.Property(e => e.Address)
                 .HasMaxLength(200)
                 .IsUnicode(false);
