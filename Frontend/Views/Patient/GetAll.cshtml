@@ -4,7 +4,7 @@
     ViewData["Title"] = "GetPatients";
 }
 
-<h1>Patients</h1>
+<h4>Patients</h4>
 
 <div class="container mt-4">
     <table class="table table-striped">
@@ -16,6 +16,7 @@
             <th>@Html.DisplayNameFor(modelItem => modelItem.Sex)</th>
             <th>@Html.DisplayNameFor(modelItem => modelItem.Address)</th>
             <th>@Html.DisplayNameFor(modelItem => modelItem.Phone)</th>
+            <th></th>
             <th></th>
         </tr>
         <tbody>
@@ -29,7 +30,8 @@
                     <td>@patient.Sex</td>
                     <td>@patient.Address</td>
                     <td>@patient.Phone</td>
-                    <td><a asp-action="GetNotes" asp-route-id="/Notes/@patient.Id" class="btn btn-primary">See Notes</a></td>
+                    <td>@Html.ActionLink("Edit Patient Info", "UpdateForm", "Patient", new { patientId = @patient.Id }, new { @class = "btn btn-primary" })</td>
+                    <td>@Html.ActionLink("See Notes", "GetNotes", "Note", new { patientId = @patient.Id, patientName = @patient.GivenName + " " + @patient.FamilyName}, new { @class = "btn btn-primary" })</td>
                 </tr>
             }
         </tbody>

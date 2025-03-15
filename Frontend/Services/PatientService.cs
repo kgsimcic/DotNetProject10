@@ -20,10 +20,22 @@ namespace Frontend.Services
             response.EnsureSuccessStatusCode();
 
             string responseString = await response.Content.ReadAsStringAsync();
-            string responseJson = responseString.Replace("\\", "").Trim(new[] { '"' });
+            string responseJson = responseString.Replace("\\", "").Trim('"');
 
-            IEnumerable<Models.PatientModel?> patients = JsonConvert.DeserializeObject<IEnumerable<PatientModel?>>(responseJson);
+            IEnumerable<PatientModel?> patients = JsonConvert.DeserializeObject<IEnumerable<PatientModel?>>(responseJson) ?? [];
             return (patients);
+        }
+
+        public async Task<PatientModel> GetById(int patientId)
+        {
+            var response = await _httpClient.GetAsync($"/Patient/Patients/{patientId}");
+            response.EnsureSuccessStatusCode();
+
+            string responseString = await response.Content.ReadAsStringAsync();
+            string responseJson = responseString.Replace("\\", "").Trim('"');
+
+            PatientModel patientModel = JsonConvert.DeserializeObject<PatientModel>(responseJson) ?? new PatientModel();
+            return (patientModel);
         }
 
         public async Task<bool> Create(PatientViewModel patientViewModel)
@@ -43,5 +55,16 @@ namespace Frontend.Services
             var response = await _httpClient.PostAsync("/Patient/Patients", content);
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<bool> Update(PatientModel patientModel)
+        {
+            string requestString = JsonConvert.SerializeObject(patientModel);
+            StringContent content = new(requestString, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PutAsync($"/Patient/Patients/{patientModel.Id}", content);
+            return response.IsSuccessStatusCode;
+        }
+
+
     }
 }

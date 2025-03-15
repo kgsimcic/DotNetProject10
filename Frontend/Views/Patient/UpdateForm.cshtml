@@ -1,15 +1,18 @@
-﻿@model Frontend.ViewModels.PatientViewModel
+﻿@model Frontend.Models.PatientModel
 
 @{
-    ViewData["Title"] = "CreatePatientForm";
+    ViewData["Title"] = "UpdateForm";
 }
 
-<h4>New Patient</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-controller="Patient" asp-action="Create">
+        <form asp-action="Update">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input type="hidden" asp-for="Id" class="form-control" />
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="GivenName" class="control-label"></label>
                 <input asp-for="GivenName" class="form-control" />
@@ -22,7 +25,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Dob" class="control-label"></label>
-                <input asp-for="Dob" class="form-control" type="date" />
+                <input asp-for="Dob" class="form-control" />
                 <span asp-validation-for="Dob" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -41,7 +44,7 @@
                 <span asp-validation-for="Phone" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>

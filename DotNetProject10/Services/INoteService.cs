@@ -1,9 +1,11 @@
-﻿namespace PatientMicroservice.Services
+﻿using PatientMicroservice.Entities;
+using PatientMicroservice.Models;
+
+namespace PatientMicroservice.Services
 {
     public interface INoteService
     {
-        // Task<int> Add(int id);
-        // Task<int> Delete(int id);
-        // Task<IEnumerable<Patient>> GetNotesForPatient(int id);
+        Task<IEnumerable<DoctorNoteModel>> GetNotes(string patientId);
+        Task<int> Create(DoctorNoteModel noteModel);
     }
 }

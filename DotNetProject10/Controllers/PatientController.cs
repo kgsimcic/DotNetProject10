@@ -1,33 +1,29 @@
 using Microsoft.AspNetCore.Mvc;
+using PatientMicroservice.Entities;
 using PatientMicroservice.Models;
 using PatientMicroservice.Services;
 
 namespace PatientMicroservice.Controllers
 {
-    public class PatientFilterCriteria
-    {
-        public DateTime Dob {  get; set; }
-        public string? GivenName { get; set; }
-        public string? FamilyName { get; set; }
-    }
 
     [ApiController]
     [Route("[controller]")]
-    public class PatientController : ControllerBase
+    public class PatientController(IPatientService patientService, ILogger<PatientController> logger, IReportService reportService) : ControllerBase
     {
-        private readonly IPatientService _patientService;
-        private readonly ILogger<PatientController> _logger;
-
-        public PatientController(IPatientService patientService, ILogger<PatientController> logger)
-        {
-            _patientService = patientService;
-            _logger = logger;
-        }
+        private readonly ILogger<PatientController> _logger = logger;
+        private readonly IPatientService _patientService = patientService;
+        private readonly IReportService _reportService = reportService;
 
         [HttpGet("Patients")]
         public async Task<ActionResult> GetPatients()
         {
             return Ok(await _patientService.GetPatients());
+        }
+
+        [HttpGet("Patients/{patientId}")]
+        public async Task<IActionResult> GetById(int patientId)
+        {
+            return Ok(await _patientService.GetPatientById(patientId));
         }
 
         [HttpPost("Patients")]
@@ -45,9 +41,17 @@ namespace PatientMicroservice.Controllers
                 return BadRequest("Id of request does not match patient info passed.");
             } else
             {
-                // need to add actual code here.
+                await _patientService.UpdatePatient(patientModel);
                 return Created();
             }
+        }
+
+        [HttpGet("Patients/Report/{patientId}")]
+        public async Task<ActionResult> GenerateReport(int patientId)
+        {
+            string result = await _reportService.GenerateReport(patientId);
+            Console.WriteLine(result);
+            return Ok(result);
         }
     }
 }
