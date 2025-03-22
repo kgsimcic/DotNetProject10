@@ -16,7 +16,7 @@ namespace Frontend.Services
 
         public async Task<IEnumerable<PatientModel?>> GetPatients()
         {
-            var response = await _httpClient.GetAsync("/Patient/Patients");
+            var response = await _httpClient.GetAsync("/Patients");
             response.EnsureSuccessStatusCode();
 
             string responseString = await response.Content.ReadAsStringAsync();
@@ -28,7 +28,7 @@ namespace Frontend.Services
 
         public async Task<PatientModel> GetById(int patientId)
         {
-            var response = await _httpClient.GetAsync($"/Patient/Patients/{patientId}");
+            var response = await _httpClient.GetAsync($"/Patients/{patientId}");
             response.EnsureSuccessStatusCode();
 
             string responseString = await response.Content.ReadAsStringAsync();
@@ -38,16 +38,8 @@ namespace Frontend.Services
             return (patientModel);
         }
 
-        public async Task<bool> Create(PatientViewModel patientViewModel)
+        public async Task<bool> Create(PatientModel patientModel)
         {
-            PatientModel patientModel = new PatientModel {
-                GivenName = patientViewModel.GivenName,
-                FamilyName = patientViewModel.FamilyName,
-                Dob = patientViewModel.Dob.ToDateTime(TimeOnly.Parse("00:00 AM")),
-                Sex = patientViewModel.Sex,
-                Address = patientViewModel.Address,
-                Phone = patientViewModel.Phone
-            };
 
             string requestString = JsonConvert.SerializeObject(patientModel);
             StringContent content = new (requestString, Encoding.UTF8, "application/json");

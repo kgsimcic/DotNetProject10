@@ -16,22 +16,24 @@ namespace Frontend.Services
 
         public async Task<IEnumerable<DoctorNoteModel?>> GetNotes(int patientId)
         {
-            var response = await _httpClient.GetAsync($"/Note/Notes/{patientId}");
+            var response = await _httpClient.GetAsync($"/Notes/{patientId}");
             response.EnsureSuccessStatusCode();
 
             string responseString = await response.Content.ReadAsStringAsync();
             string responseJson = responseString.Replace("\\", "").Trim('"');
 
             IEnumerable<DoctorNoteModel?> notes = JsonConvert.DeserializeObject<IEnumerable<DoctorNoteModel?>>(responseJson) ?? [];
-            return (notes);
+
+            return notes;
         }
 
         public async Task<bool> Create(DoctorNoteModel noteModel)
         {
+
             string requestString = JsonConvert.SerializeObject(noteModel);
             StringContent content = new (requestString, Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PostAsync("/Note/Notes", content);
+            var response = await _httpClient.PostAsync("/Notes", content);
             return response.IsSuccessStatusCode;
         }
     }

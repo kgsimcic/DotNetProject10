@@ -1,10 +1,10 @@
-﻿@model Frontend.Models.DoctorNoteModel
+﻿@model Frontend.ViewModels.NoteCreateFormViewModel
 
 @{
     ViewData["Title"] = "CreateForm";
 }
 
-<h4>@($"New Note for {ViewBag.PatientName}")</h4>
+<h4>@($"New Note for {Model.PatientName}")</h4>
 
 <hr />
 <div class="row">

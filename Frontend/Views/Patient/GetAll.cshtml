@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Frontend.Models.PatientModel>
+﻿@model Frontend.ViewModels.PatientViewModel
 
 @{
     ViewData["Title"] = "GetPatients";
@@ -9,18 +9,18 @@
 <div class="container mt-4">
     <table class="table table-striped">
         <tr>
-            <th>@Html.DisplayNameFor(modelItem => modelItem.Id)</th>
-            <th>@Html.DisplayNameFor(modelItem => modelItem.GivenName)</th>
-            <th>@Html.DisplayNameFor(modelItem => modelItem.FamilyName)</th>
-            <th>@Html.DisplayNameFor(modelItem => modelItem.Dob)</th>
-            <th>@Html.DisplayNameFor(modelItem => modelItem.Sex)</th>
-            <th>@Html.DisplayNameFor(modelItem => modelItem.Address)</th>
-            <th>@Html.DisplayNameFor(modelItem => modelItem.Phone)</th>
+            <th>@Html.DisplayNameFor(Model => Model.Patients.First().Id)</th>
+            <th>@Html.DisplayNameFor(Model => Model.Patients.First().GivenName)</th>
+            <th>@Html.DisplayNameFor(Model => Model.Patients.First().FamilyName)</th>
+            <th>@Html.DisplayNameFor(Model => Model.Patients.First().Dob)</th>
+            <th>@Html.DisplayNameFor(Model => Model.Patients.First().Sex)</th>
+            <th>@Html.DisplayNameFor(Model => Model.Patients.First().Address)</th>
+            <th>@Html.DisplayNameFor(Model => Model.Patients.First().Phone)</th>
             <th></th>
             <th></th>
         </tr>
         <tbody>
-            @foreach (var patient in Model)
+            @foreach (var patient in Model.Patients)
             {
                 <tr>
                     <td>@patient.Id</td>

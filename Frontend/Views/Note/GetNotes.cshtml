@@ -1,13 +1,13 @@
-﻿@model IEnumerable<Frontend.Models.DoctorNoteModel>
+﻿@model Frontend.ViewModels.DoctorNoteViewModel
 
 @{
     ViewData["Title"] = "GetNotes";
 }
 
-<h4>@($"All Notes for {ViewBag.PatientName}")</h4>
+<h4>@($"All Notes for {Model.PatientName}")</h4>
 
 <p>
-    @Html.ActionLink("New Note", "CreateForm", "Note", new { patientId = ViewBag.PatientId, patientName = ViewBag.PatientName }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("New Note", "CreateForm", "Note", new { patientId = Model.PatientId, patientName = Model.PatientName }, new { @class = "btn btn-primary" })
 </p>
 <table class="table">
     <thead>
@@ -16,13 +16,13 @@
                 @Html.DisplayNameFor(model => model.PatientId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Note)
+                Note
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Notes) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.PatientId)
@@ -35,5 +35,5 @@
     </tbody>
 </table>
 <p>
-    @Html.ActionLink("Generate Report", "GenerateReport", "Patient", new { patientId = ViewBag.PatientId }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Generate Report", "GenerateReport", "Patient", new { patientId = Model.PatientId }, new { @class = "btn btn-primary" })
 </p>

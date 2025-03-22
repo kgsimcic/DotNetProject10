@@ -13,7 +13,7 @@ namespace Frontend.Services
 
         public async Task<string> GenerateReport(int patientId)
         {
-            var response = await _httpClient.GetAsync($"/Patient/Patients/Report/{patientId}");
+            var response = await _httpClient.GetAsync($"/Patients/Report/{patientId}");
             response.EnsureSuccessStatusCode();
             return (await response.Content.ReadAsStringAsync());
         }
