@@ -38,6 +38,7 @@ namespace PatientMicroservice.Controllers
         {
             if (patientModel.Id != Id)
             {
+                _logger.LogError("Invalid field value!");
                 return BadRequest("Id of request does not match patient info passed.");
             }
             else

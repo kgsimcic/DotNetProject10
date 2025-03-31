@@ -14,7 +14,7 @@ namespace Frontend.Services
             _httpClient.BaseAddress = new Uri("https://localhost:7185");
         }
 
-        public async Task<IEnumerable<PatientModel?>> GetPatients()
+        public async Task<IEnumerable<PatientModel>?> GetPatients()
         {
             var response = await _httpClient.GetAsync("/Patients");
             response.EnsureSuccessStatusCode();
@@ -22,7 +22,7 @@ namespace Frontend.Services
             string responseString = await response.Content.ReadAsStringAsync();
             string responseJson = responseString.Replace("\\", "").Trim('"');
 
-            IEnumerable<PatientModel?> patients = JsonConvert.DeserializeObject<IEnumerable<PatientModel?>>(responseJson) ?? [];
+            IEnumerable<PatientModel>? patients = JsonConvert.DeserializeObject<IEnumerable<PatientModel>?>(responseJson) ?? [];
             return (patients);
         }
 
