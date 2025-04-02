@@ -17,13 +17,13 @@ namespace PatientMicroservice.Controllers
             _logger = logger;
         }
 
-        [HttpGet("Notes/{patientId}")]
+        [HttpGet("{patientId}")]
         public async Task<ActionResult> GetNotes(int patientId)
         {
             return Ok(await _noteService.GetNotes(patientId.ToString()));
         }
 
-        [HttpPost("Notes")]
+        [HttpPost()]
         public async Task<IActionResult> CreateNote([FromBody] DoctorNoteModel noteModel)
         {
             await _noteService.Create(noteModel);
