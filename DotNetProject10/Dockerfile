@@ -8,16 +8,16 @@ EXPOSE 8081
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
-WORKDIR /src
-COPY ["DotNetProject10/DotNetProject10.csproj", "DotNetProject10/"]
-RUN dotnet restore "./DotNetProject10/DotNetProject10.csproj"
+WORKDIR /DotNetProject10
+COPY ["PatientMicroservice.csproj", "./"]
+RUN dotnet restore "./PatientMicroservice.csproj"
 COPY . .
-WORKDIR "/src/DotNetProject10"
-RUN dotnet build "./DotNetProject10.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/DotNetProject10"
+RUN dotnet build "./PatientMicroservice.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./DotNetProject10.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./PatientMicroservice.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
