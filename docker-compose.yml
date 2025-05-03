@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  webapi:
+    build:
+      context: ./DotNetProject10
+    depends_on:
+      - sqlserver
+      - mongodb
+
+  frontend:
+    build:
+      context: ./Frontend
+    depends_on:
+      - webapi
+
+  sqlserver:
+    build:
+      context: ./db/sqlserver
+
+  mongodb:
+    build:
+      context: ./db/mongodb

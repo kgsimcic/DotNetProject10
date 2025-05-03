@@ -10,12 +10,10 @@ namespace PatientMicroservice.Services
     public class PatientService : IPatientService
     {
         private readonly PatientDbContext _context;
-        // private readonly PatientMappingProfile _mapper;
         private readonly ILogger<PatientService> _logger;
 
         public PatientService(PatientDbContext patientDbContext, ILogger<PatientService> logger) {
             _context = patientDbContext;
-            // _mapper = mapper;
             _logger = logger;
         }
 
