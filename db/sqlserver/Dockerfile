@@ -1,9 +1,9 @@
 FROM mcr.microsoft.com/mssql/server:2022-latest
 
 # Copy backup file
-COPY data/YourDatabase.bak /var/opt/mssql/backup/
+COPY data/PatientDb.bak /var/opt/mssql/backup/
 
-ENV SA_PASSWORD=YourStrong@Password!
+ENV SA_PASSWORD=test_password!
 ENV ACCEPT_EULA=Y
 
 # Add script to restore database

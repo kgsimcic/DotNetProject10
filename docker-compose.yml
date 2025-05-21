@@ -3,6 +3,8 @@ services:
   webapi:
     build:
       context: ./DotNetProject10
+    ports:
+      - "8080:80"
     depends_on:
       - sqlserver
       - mongodb
@@ -16,7 +18,22 @@ services:
   sqlserver:
     build:
       context: ./db/sqlserver
+    environment:
+      - SA_PASSWORD=test_password!
+      - ACCEPT_EULA=Y
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqldata:/var/opt/mssql
 
   mongodb:
     build:
       context: ./db/mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/data/db
+
+volumes:
+  sqldata:
+  mongodata:
