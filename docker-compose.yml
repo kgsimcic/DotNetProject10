@@ -1,10 +1,9 @@
-version: '3.8'
 services:
   webapi:
     build:
       context: ./DotNetProject10
     ports:
-      - "8080:80"
+      - "7185:7185"
     depends_on:
       - sqlserver
       - mongodb
@@ -14,21 +13,27 @@ services:
       context: ./Frontend
     depends_on:
       - webapi
+    ports:
+      - "8080:8080"
 
   sqlserver:
     build:
       context: ./db/sqlserver
     environment:
-      - SA_PASSWORD=test_password!
+      - SA_PASSWORD=Test_Password1!
       - ACCEPT_EULA=Y
+      - MSSQL_PID=Express
     ports:
       - "1433:1433"
     volumes:
       - sqldata:/var/opt/mssql
-
+  
   mongodb:
     build:
       context: ./db/mongodb
+    environment:
+      - MONGO_USERNAME=admin
+      - MONGO_PASSWORD=Test_Password1!
     ports:
       - "27017:27017"
     volumes:

@@ -22,4 +22,4 @@ RUN dotnet publish "./PatientMicroservice.csproj" -c $BUILD_CONFIGURATION -o /ap
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "DotNetProject10.dll"]
+ENTRYPOINT ["dotnet", "PatientMicroservice.dll"]
