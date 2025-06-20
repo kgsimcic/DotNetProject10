@@ -1,7 +1,7 @@
 FROM mongo:7.0
 
 ENV MONGO_USERNAME=admin
-ENV MONGO_PASSWORD=test_password1!
+ENV MONGO_PASSWORD=Test_Password1!
 ENV MONGO_DATABASE=local
 
 RUN mkdir -p /dump/local

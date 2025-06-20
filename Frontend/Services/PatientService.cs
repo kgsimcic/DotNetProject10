@@ -11,7 +11,7 @@ namespace Frontend.Services
         private readonly HttpClient _httpClient;
         public PatientService(HttpClient httpClient) {
             _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri("https://localhost:7185");
+            _httpClient.BaseAddress = new Uri("http://webapi:7185");
         }
 
         public async Task<IEnumerable<PatientModel>?> GetPatients()
@@ -44,7 +44,7 @@ namespace Frontend.Services
             string requestString = JsonConvert.SerializeObject(patientModel);
             StringContent content = new (requestString, Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PostAsync("/Patient/Patients", content);
+            var response = await _httpClient.PostAsync("/Patients", content);
             return response.IsSuccessStatusCode;
         }
 
@@ -53,7 +53,7 @@ namespace Frontend.Services
             string requestString = JsonConvert.SerializeObject(patientModel);
             StringContent content = new(requestString, Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PutAsync($"/Patient/Patients/{patientModel.Id}", content);
+            var response = await _httpClient.PutAsync($"/Patients/{patientModel.Id}", content);
             return response.IsSuccessStatusCode;
         }
 

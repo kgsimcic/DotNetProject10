@@ -1,38 +1,56 @@
 #!/bin/bash
 set -e
 
-/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$SA_PASSWORD" -Q "SELECT 1" -b -o /dev/null
+/opt/mssql/bin/sqlservr &
+SQL_PID=$!
+
+echo "Waiting for SQL Server to start..."
+for i in {1..30}; do
+    if /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$SA_PASSWORD" -Q "SELECT 1" -C -b -o /dev/null 2>/dev/null; then
+        echo "SQL Server is ready!"
+        break
+    fi
+    echo "Waiting... ($i/30)"
+    sleep 2
+done
+
+# Test connection
+/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$SA_PASSWORD" -Q "SELECT 1" -C -b -o /dev/null
 if [ $? -ne 0 ]; then
-	echo "SQL Server did not start in time. Exiting."
-	exit 1
+    echo "SQL Server did not start in time. Exiting."
+    exit 1
 fi
 
 echo "SQL Server started. Restoring PatientDb..."
 
 DB_NAME="PatientDb"
 
-/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$SA_PASSWORD" -Q "IF DB_ID('$DB_NAME') IS NOT NULL BEGIN ALTER DATABASE [$DB_NAME] SET SINGLE_USER WITH ROLLBACK IMMEDIATE END"
+/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$SA_PASSWORD" -C -Q "CREATE DATABASE [PatientDb];"
 
-echo "Getting file names"
-/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$SA_PASSWORD" -Q "RESTORE FILELISTONLY FROM DISK='/var/opt/mssql/backup/PatientDb.bak'" -o /tmp/db_files.txt
+/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$SA_PASSWORD" -C -Q "IF DB_ID('$DB_NAME') IS NOT NULL BEGIN ALTER DATABASE [$DB_NAME] SET SINGLE_USER WITH ROLLBACK IMMEDIATE END"
 
-DATA_FILE=$(grep "rows" /tmp/db_files.txt | grep "DATA" | awk '{print $1}')
-LOG_FILE=$(grep "rows" /tmp/db_files.txt | grep "LOG" | awk '{print $1}')
+echo "Database created."
 
-if [ -z "$DATA_FILE" ] || [ -z "$LOG_FILE" ]; then
-  echo "Failed to get database file names. Manually specifying them..."
-  DATA_FILE="${DB_NAME}"
-  LOG_FILE="${DB_NAME}_log"
-fi
+/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$SA_PASSWORD" -C -Q "USE [PatientDb];
+CREATE TABLE Patients (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    GivenName VARCHAR(50),
+    FamilyName VARCHAR(50),
+    Dob DATETIME,
+    Sex CHAR,
+    Address VARCHAR(200),
+    Phone VARCHAR(16)
+);
+INSERT INTO Patients (GivenName, FamilyName, Dob, Sex, Address, Phone) VALUES (
+'Test', 'TestNone', '1966-12-31', 'F', '1 Brookside St', '1002223333');
+INSERT INTO Patients (GivenName, FamilyName, Dob, Sex, Address, Phone) VALUES (
+'Test', 'TestBorderline', '1945-06-24', 'M', '2 High St', '2003334444');
+INSERT INTO Patients (GivenName, FamilyName, Dob, Sex, Address, Phone) VALUES (
+'Test', 'TestInDanger', '2004-06-18', 'M', '3 Club Rd', '3004445555');
+INSERT INTO Patients (GivenName, FamilyName, Dob, Sex, Address, Phone) VALUES (
+'Test', 'TestEarlyOnset', '2002-06-28', 'F', '4 Valley Dr', '4005556666');
+"
 
-echo "DATA_FILE = $DATA_FILE"
-echo "LOG_FILE = $LOG_FILE"
-
-# Perform the restore
-echo "Starting database restore..."
-/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$SA_PASSWORD" -Q "RESTORE DATABASE [$DB_NAME] FROM DISK='/var/opt/mssql/backup/YourDatabase.bak' WITH MOVE '$DATA_FILE' TO '/var/opt/mssql/data/${DB_NAME}.mdf', MOVE '$LOG_FILE' TO '/var/opt/mssql/data/${DB_NAME}_log.ldf', REPLACE"
-
-# Check if restore was successful
 if [ $? -eq 0 ]; then
   echo "Database restore completed successfully!"
 else
@@ -40,4 +58,13 @@ else
   exit 1
 fi
 
-/opt/mssql/bin/sqlservr
+/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$SA_PASSWORD" -C -Q "ALTER DATABASE [$DB_NAME] SET MULTI_USER"
+
+if [ $? -eq 0 ]; then
+  echo "Database set back to multi-user access."
+else
+  echo "Database set back to multi-user access FAILED."
+  exit 1
+fi
+
+wait $SQL_PID

@@ -16,10 +16,11 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.Urls.Add("http://0.0.0.0:8080");
 
 app.UseAuthorization();
 

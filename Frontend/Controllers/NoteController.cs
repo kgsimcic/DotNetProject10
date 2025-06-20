@@ -30,7 +30,7 @@ namespace Frontend.Controllers
         public IActionResult CreateForm(int patientId, string patientName)
         {
             return View(
-                new DoctorNoteViewModel {
+                new NoteCreateFormViewModel {
                     PatientId = patientId,
                     PatientName = patientName
                 });

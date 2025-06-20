@@ -39,6 +39,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.Urls.Add("http://0.0.0.0:7185");
 
 app.UseAuthorization();
 

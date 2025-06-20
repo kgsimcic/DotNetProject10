@@ -2,6 +2,8 @@ services:
   webapi:
     build:
       context: ./DotNetProject10
+    environment:
+      - ASPNETCORE_URLS=http://0.0.0.0:7185
     ports:
       - "7185:7185"
     depends_on:
@@ -13,6 +15,9 @@ services:
       context: ./Frontend
     depends_on:
       - webapi
+    environment:
+      - ASPNETCORE_URLS=http://0.0.0.0:8080
+      - BACKEND_URL=http://webapi:7185
     ports:
       - "8080:8080"
 
@@ -20,13 +25,17 @@ services:
     build:
       context: ./db/sqlserver
     environment:
-      - SA_PASSWORD=Test_Password1!
+      - MSSQL_SA_PASSWORD=Test_Password1!
       - ACCEPT_EULA=Y
-      - MSSQL_PID=Express
     ports:
-      - "1433:1433"
+      - "1400:1433"
     volumes:
       - sqldata:/var/opt/mssql
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
   
   mongodb:
     build:

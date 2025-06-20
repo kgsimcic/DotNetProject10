@@ -10,6 +10,12 @@ namespace PatientMicroservice.Services
         private readonly ILogger<ReportService> _logger = logger;
         private readonly IPatientService _patientService = patientService;
         private readonly INoteService _noteService = noteService;
+        private readonly List<string> riskLevels = [
+            "None",
+            "Borderline",
+            "In Danger",
+            "Early Onset"
+        ];
         private readonly List<string> triggerWords = [
             "Hemoglobin A1C",
             "Microalbumin",
@@ -38,8 +44,8 @@ namespace PatientMicroservice.Services
             IEnumerable<DoctorNoteModel> notes = await _noteService.GetNotes(patientId.ToString());
 
             int triggerWords = CountTriggers(notes);
-            if (triggerWords < 2) return "None";
-            if (triggerWords >= 8) return "Early Onset";
+            if (triggerWords < 2) return riskLevels[0];
+            if (triggerWords >= 8) return riskLevels[3];
 
             var age = DateTime.Now - patientModel.Dob;
             double ageYears = age.TotalDays/365;
@@ -48,9 +54,9 @@ namespace PatientMicroservice.Services
             {
                 return triggerWords switch
                 {
-                    >= 6 => "In Danger",
-                    >= 2 => "Borderline",
-                    _ => "None"
+                    >= 6 => riskLevels[2],
+                    >= 2 => riskLevels[1],
+                    _ => riskLevels[0]
                 };
             } 
             
@@ -58,17 +64,17 @@ namespace PatientMicroservice.Services
             {
                 return triggerWords switch
                 {
-                    >= 5 => "Early Onset",
-                    >= 3 => "In Danger",
-                    _ => "None"
+                    >= 5 => riskLevels[3],
+                    >= 3 => riskLevels[2],
+                    _ => riskLevels[0]
                 };
             }
 
             return triggerWords switch
             {
-                >= 7 => "Early Onset",
-                >= 4 => "In Danger",
-                _ => "None"
+                >= 7 => riskLevels[3],
+                >= 4 => riskLevels[2],
+                _ => riskLevels[0]
             };
         }
     }

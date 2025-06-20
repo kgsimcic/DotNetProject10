@@ -2,6 +2,7 @@ using Frontend.Models;
 using Frontend.Services;
 using Frontend.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Common;
 using System.Diagnostics;
 
 namespace Frontend.Controllers
@@ -50,6 +51,7 @@ namespace Frontend.Controllers
                 Address = patientCreateFormViewModel.Address,
                 Phone = patientCreateFormViewModel.Phone
             };
+
             await _patientService.Create(patientModel);
             return RedirectToAction(nameof(GetAll));
         }
@@ -58,6 +60,7 @@ namespace Frontend.Controllers
         {
             PatientModel patientModel = new()
             {
+                Id = patientViewModel.Id,
                 GivenName = patientViewModel.GivenName,
                 FamilyName = patientViewModel.FamilyName,
                 Dob = patientViewModel.Dob.ToDateTime(TimeOnly.Parse("00:00 AM")),
@@ -66,6 +69,7 @@ namespace Frontend.Controllers
                 Phone = patientViewModel.Phone
             };
 
+            _logger.LogInformation("Patient ID to alter: ${id}", patientViewModel.Id);
             await _patientService.Update(patientModel);
             return RedirectToAction(nameof(GetAll));
         }
