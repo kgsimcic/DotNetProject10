@@ -29,4 +29,3 @@ app.MapControllerRoute(
     pattern: "{controller=Patient}/{action=GetAll}");
 
 app.Run();
- 
