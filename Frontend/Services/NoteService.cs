@@ -11,7 +11,7 @@ namespace Frontend.Services
         private readonly HttpClient _httpClient;
         public NoteService(HttpClient httpClient) {
             _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri("http://webapi:7185");
+            _httpClient.BaseAddress = new Uri(Environment.GetEnvironmentVariable("BACKEND_URL"));
         }
 
         public async Task<IEnumerable<DoctorNoteModel?>> GetNotes(int patientId)

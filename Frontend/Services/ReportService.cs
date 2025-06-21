@@ -8,7 +8,7 @@ namespace Frontend.Services
         public ReportService(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri("http://webapi:7185");
+            _httpClient.BaseAddress = new Uri(Environment.GetEnvironmentVariable("BACKEND_URL"));
         }
 
         public async Task<string> GenerateReport(int patientId)
